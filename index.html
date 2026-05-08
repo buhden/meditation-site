@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meditation Mixer</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="background"></div>
+  <div id="overlay"></div>
+
+
+  <main class="hero">
+    <h1>Meditation Mixer</h1>
+    <p>Layer sound, select a visual atmosphere, and begin your session.</p>
+
+
+    <button id="beginBtn" class="primary">Meditate</button>
+    <button id="stopBtn">Stop</button>
+
+
+    <div id="timerDisplay">10:00</div>
+  </main>
+
+
+  <button id="menuBtn" class="menu-button">☰</button>
+
+
+  <aside id="menu" class="menu open">
+    <h2>Session 1</h2>
+
+
+    <label>Background</label>
+    <select id="backgroundSelect">
+      <option value="assets/gifs/candle.gif">Candle</option>
+      <option value="assets/gifs/rain.gif" selected>Rain</option>
+      <option value="assets/gifs/forest.gif">Forest</option>
+    </select>
+
+
+    <label>Timer</label>
+    <select id="timerSelect">
+      <option value="5">5 minutes</option>
+      <option value="10" selected>10 minutes</option>
+      <option value="15">15 minutes</option>
+      <option value="20">20 minutes</option>
+      <option value="30">30 minutes</option>
+      <option value="45">45 minutes</option>
+      <option value="60">60 minutes</option>
+    </select>
+
+
+    <h3>Sounds</h3>
+
+
+    <div class="sound-row">
+      <input type="checkbox" data-sound="rain" checked />
+      <span>Rain</span>
+      <input type="range" min="0" max="1" step="0.01" value="0.45" data-volume="rain" />
+    </div>
+
+
+    <div class="sound-row">
+      <input type="checkbox" data-sound="music" checked />
+      <span>Music</span>
+      <input type="range" min="0" max="1" step="0.01" value="0.25" data-volume="music" />
+    </div>
+
+
+    <div class="sound-row">
+      <input type="checkbox" data-sound="chants" checked />
+      <span>Chants</span>
+      <input type="range" min="0" max="1" step="0.01" value="0.20" data-volume="chants" />
+    </div>
+
+
+    <div class="sound-row">
+      <input type="checkbox" data-sound="fire" />
+      <span>Fire</span>
+      <input type="range" min="0" max="1" step="0.01" value="0.30" data-volume="fire" />
+    </div>
+
+
+    <h3>Binaural Tone</h3>
+    <select id="toneSelect">
+      <option value="delta">Delta — deep sleep</option>
+      <option value="theta" selected>Theta — meditation</option>
+      <option value="alpha">Alpha — calm focus</option>
+      <option value="beta">Beta — active thinking</option>
+      <option value="gamma">Gamma — cognition</option>
+    </select>
+
+
+    <div class="sound-row">
+      <input type="checkbox" id="toneToggle" checked />
+      <span>Tone</span>
+      <input type="range" min="0" max="1" step="0.01" value="0.15" id="toneVolume" />
+    </div>
+
+
+    <h3>Guidance</h3>
+    <select id="guidanceSelect">
+      <option value="">None</option>
+      <option value="breathing">Breathing</option>
+      <option value="relaxation">Relaxation</option>
+      <option value="zazen">Zazen / Shikantaza</option>
+    </select>
+
+
+    <div class="sound-row">
+      <input type="checkbox" id="guidanceToggle" />
+      <span>Guidance</span>
+      <input type="range" min="0" max="1" step="0.01" value="0.70" id="guidanceVolume" />
+    </div>
+
+
+    <button id="addSessionBtn">+ Add Session</button>
+  </aside>
+
+
+  <audio id="rain" loop src="assets/audio/rain.mp3"></audio>
+  <audio id="music" loop src="assets/audio/music.mp3"></audio>
+  <audio id="chants" loop src="assets/audio/chants.mp3"></audio>
+  <audio id="fire" loop src="assets/audio/fire.mp3"></audio>
+  <audio id="bowl" src="assets/audio/bowl.mp3"></audio>
+
+
+  <script src="app.js"></script>
+</body>
+</html>
