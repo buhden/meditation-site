@@ -30,6 +30,61 @@ const toneFrequencies = {
   gamma: 40
 };
 
+const FADE_DURATION = 3000; // 3 seconds
+
+async function fadeIn(audio, targetVolume = 1) {
+  audio.volume = 0;
+
+  try {
+    await audio.play();
+  } catch (error) {
+    console.log("Playback requires interaction.", error);
+    return;
+  }
+
+  const steps = 30;
+  const stepTime = FADE_DURATION / steps;
+  const volumeStep = targetVolume / steps;
+
+  let currentStep = 0;
+
+  const fade = setInterval(() => {
+    currentStep++;
+
+    audio.volume = Math.min(volumeStep * currentStep, targetVolume);
+
+    if (currentStep >= steps) {
+      clearInterval(fade);
+      audio.volume = targetVolume;
+    }
+  }, stepTime);
+}
+
+function fadeOut(audio) {
+  const startVolume = audio.volume;
+
+  const steps = 30;
+  const stepTime = FADE_DURATION / steps;
+  const volumeStep = startVolume / steps;
+
+  let currentStep = 0;
+
+  const fade = setInterval(() => {
+    currentStep++;
+
+    audio.volume = Math.max(
+      startVolume - volumeStep * currentStep,
+      0
+    );
+
+    if (currentStep >= steps) {
+      clearInterval(fade);
+      audio.pause();
+      audio.currentTime = 0;
+    }
+  }, stepTime);
+}
+
 function ensureAudioContext() {
   if (!audioContext) {
     audioContext = new AudioContext();
@@ -44,18 +99,9 @@ function setBackground(src) {
   }, 600);
 }
 
-async function playAudio(audio) {
-  try {
-    await audio.play();
-  } catch (error) {
-    console.log("Playback requires user interaction.", error);
-  }
-}
-
 function stopAllAudio() {
   Object.values(sounds).forEach(audio => {
-    audio.pause();
-    audio.currentTime = 0;
+    fadeOut(audio);
   });
 
   stopTone();
@@ -67,9 +113,15 @@ function startSelectedSounds() {
     const audio = sounds[name];
 
     if (toggle.checked) {
-      playAudio(audio);
+      const slider = document.querySelector(
+        `[data-volume="${name}"]`
+      );
+
+      const targetVolume = Number(slider.value);
+
+      fadeIn(audio, targetVolume);
     } else {
-      audio.pause();
+      fadeOut(audio);
     }
   });
 }
@@ -77,7 +129,9 @@ function startSelectedSounds() {
 function updateVolumes() {
   document.querySelectorAll("[data-volume]").forEach(slider => {
     const name = slider.dataset.volume;
-    sounds[name].volume = Number(slider.value);
+    const targetVolume = Number(slider.value);
+
+    sounds[name].volume = targetVolume;
   });
 }
 
@@ -133,7 +187,7 @@ function startTimer(minutes) {
 function completeSession() {
   clearInterval(timerInterval);
   stopAllAudio();
-  playAudio(bowl);
+  fadeIn(bowl, 1);
   timerDisplay.textContent = "Complete";
   menu.classList.add("open");
 }
@@ -161,6 +215,24 @@ backgroundSelect.addEventListener("change", () => {
 
 document.querySelectorAll("[data-volume]").forEach(slider => {
   slider.addEventListener("input", updateVolumes);
+});
+document.querySelectorAll("[data-sound]").forEach(toggle => {
+  toggle.addEventListener("change", () => {
+    const name = toggle.dataset.sound;
+    const audio = sounds[name];
+
+    const slider = document.querySelector(
+      `[data-volume="${name}"]`
+    );
+
+    const targetVolume = Number(slider.value);
+
+    if (toggle.checked) {
+      fadeIn(audio, targetVolume);
+    } else {
+      fadeOut(audio);
+    }
+  });
 });
 
 document.getElementById("toneVolume").addEventListener("input", e => {
