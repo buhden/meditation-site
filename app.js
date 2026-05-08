@@ -30,59 +30,84 @@ const toneFrequencies = {
   gamma: 40
 };
 
-const FADE_DURATION = 3000; // 3 seconds
+const FADE_DURATION = 3000;
+const activeFades = new Map();
+
+function cancelFade(audio) {
+  if (activeFades.has(audio)) {
+    clearInterval(activeFades.get(audio));
+    activeFades.delete(audio);
+  }
+}
 
 async function fadeIn(audio, targetVolume = 1) {
-  audio.volume = 0;
+  cancelFade(audio);
+
+  audio.volume = Math.max(audio.volume || 0, 0);
 
   try {
-    await audio.play();
+    if (audio.paused) {
+      await audio.play();
+    }
   } catch (error) {
     console.log("Playback requires interaction.", error);
     return;
   }
 
-  const steps = 30;
-  const stepTime = FADE_DURATION / steps;
-  const volumeStep = targetVolume / steps;
-
-  let currentStep = 0;
-
-  const fade = setInterval(() => {
-    currentStep++;
-
-    audio.volume = Math.min(volumeStep * currentStep, targetVolume);
-
-    if (currentStep >= steps) {
-      clearInterval(fade);
-      audio.volume = targetVolume;
-    }
-  }, stepTime);
-}
-
-function fadeOut(audio) {
   const startVolume = audio.volume;
-
-  const steps = 30;
+  const volumeChange = targetVolume - startVolume;
+  const steps = 60;
   const stepTime = FADE_DURATION / steps;
-  const volumeStep = startVolume / steps;
-
   let currentStep = 0;
 
   const fade = setInterval(() => {
     currentStep++;
+    const progress = currentStep / steps;
 
-    audio.volume = Math.max(
-      startVolume - volumeStep * currentStep,
-      0
+    audio.volume = Math.min(
+      Math.max(startVolume + volumeChange * progress, 0),
+      1
     );
 
     if (currentStep >= steps) {
       clearInterval(fade);
-      audio.pause();
-      audio.currentTime = 0;
+      activeFades.delete(audio);
+      audio.volume = targetVolume;
     }
   }, stepTime);
+
+  activeFades.set(audio, fade);
+}
+
+function fadeOut(audio, resetTime = true) {
+  cancelFade(audio);
+
+  const startVolume = audio.volume;
+  const steps = 60;
+  const stepTime = FADE_DURATION / steps;
+  let currentStep = 0;
+
+  const fade = setInterval(() => {
+    currentStep++;
+    const progress = currentStep / steps;
+
+    audio.volume = Math.max(startVolume * (1 - progress), 0);
+
+    if (currentStep >= steps) {
+      clearInterval(fade);
+      activeFades.delete(audio);
+
+      audio.pause();
+
+      if (resetTime) {
+        audio.currentTime = 0;
+      }
+
+      audio.volume = 0;
+    }
+  }, stepTime);
+
+  activeFades.set(audio, fade);
 }
 
 function ensureAudioContext() {
@@ -101,7 +126,7 @@ function setBackground(src) {
 
 function stopAllAudio() {
   Object.values(sounds).forEach(audio => {
-    fadeOut(audio);
+    fadeOut(audio, true);
   });
 
   stopTone();
@@ -111,17 +136,13 @@ function startSelectedSounds() {
   document.querySelectorAll("[data-sound]").forEach(toggle => {
     const name = toggle.dataset.sound;
     const audio = sounds[name];
+    const slider = document.querySelector(`[data-volume="${name}"]`);
+    const targetVolume = Number(slider.value);
 
     if (toggle.checked) {
-      const slider = document.querySelector(
-        `[data-volume="${name}"]`
-      );
-
-      const targetVolume = Number(slider.value);
-
       fadeIn(audio, targetVolume);
     } else {
-      fadeOut(audio);
+      fadeOut(audio, true);
     }
   });
 }
