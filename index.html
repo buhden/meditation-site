@@ -91,6 +91,59 @@
       <input type="range" min="0" max="1" step="0.01" value="0.30" data-volume="fire" />
     </div>
 
+<div class="sound-row">
+  <input type="checkbox" data-sound="ocean" />
+  <span>Ocean</span>
+  <input
+    type="range"
+    min="0"
+    max="1"
+    step="0.01"
+    value="0.35"
+    data-volume="ocean"
+  />
+</div>
+
+<div class="sound-row">
+  <input type="checkbox" data-sound="forest" />
+  <span>Ocean</span>
+  <input
+    type="range"
+    min="0"
+    max="1"
+    step="0.01"
+    value="0.35"
+    data-volume="ocean"
+  />
+</div>
+
+<div class="sound-row">
+  <input type="checkbox" data-sound="candle" />
+  <span>Ocean</span>
+  <input
+    type="range"
+    min="0"
+    max="1"
+    step="0.01"
+    value="0.35"
+    data-volume="ocean"
+  />
+</div>
+
+<h3>Noise</h3>
+
+<select id="noiseSelect">
+  <option value="brown">Brown Noise</option>
+  <option value="pink">Pink Noise</option>
+  <option value="white">White Noise</option>
+  <option value="green">Green Noise</option>
+</select>
+
+<div class="sound-row">
+  <input type="checkbox" id="noiseToggle" />
+  <span>Noise</span>
+  <input type="range" min="0" max="1" step="0.01" value="0.15" id="noiseVolume" />
+</div>
 
     <h3>Binaural Tone</h3>
     <select id="toneSelect">
@@ -134,6 +187,9 @@
   <audio id="chants" loop src="assets/audio/chants.mp3"></audio>
   <audio id="fire" loop src="assets/audio/fire.mp3"></audio>
   <audio id="bowl" src="assets/audio/bowl.mp3"></audio>
+<audio id="ocean" loop src="assets/audio/ocean.mp3"></audio>
+<audio id="candle" loop src="assets/audio/candle.mp3"></audio>
+<audio id="forest" loop src="assets/audio/forest.mp3"></audio>
 
 
   <script src="app.js"></script>
