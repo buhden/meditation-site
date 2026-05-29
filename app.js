@@ -3,6 +3,9 @@ const sounds = {
   music: document.getElementById("music"),
   chants: document.getElementById("chants"),
   fire: document.getElementById("fire")
+ocean: document.getElementById("ocean")
+candle: document.getElementById("candle")
+forest: document.getElementById("forest")
 };
 
 const background = document.getElementById("background");
@@ -24,6 +27,9 @@ let endTime;
 
 const FADE_DURATION = 5000;
 const activeFades = new Map();
+
+let noiseSource;
+let noiseGain;
 
 const toneFrequencies = {
   delta: 2.5,
@@ -224,6 +230,7 @@ function stopAllAudio() {
   });
 
   stopTone();
+stopNoise();
 }
 
 function startTone() {
@@ -278,9 +285,69 @@ function startTimer(minutes) {
   }, 1000);
 }
 
+function createNoiseBuffer(type = "brown") {
+  ensureAudioContext();
+
+  const bufferSize = audioContext.sampleRate * 2;
+  const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+  const data = buffer.getChannelData(0);
+
+  let lastOut = 0;
+
+  for (let i = 0; i < bufferSize; i++) {
+    const white = Math.random() * 2 - 1;
+
+    if (type === "white") {
+      data[i] = white * 0.35;
+    } else if (type === "brown") {
+      lastOut = (lastOut + 0.02 * white) / 1.02;
+      data[i] = lastOut * 3.5;
+    } else if (type === "pink") {
+      lastOut = 0.98 * lastOut + 0.02 * white;
+      data[i] = lastOut * 1.2;
+    } else if (type === "green") {
+      lastOut = 0.95 * lastOut + 0.05 * white;
+      data[i] = lastOut * 0.9;
+    }
+  }
+
+  return buffer;
+}
+
+function startNoise() {
+  const noiseToggle = document.getElementById("noiseToggle");
+  if (!noiseToggle || !noiseToggle.checked) return;
+
+  ensureAudioContext();
+  stopNoise();
+
+  const type = document.getElementById("noiseSelect").value;
+  const volume = Number(document.getElementById("noiseVolume").value);
+
+  noiseSource = audioContext.createBufferSource();
+  noiseGain = audioContext.createGain();
+
+  noiseSource.buffer = createNoiseBuffer(type);
+  noiseSource.loop = true;
+  noiseGain.gain.value = volume * 0.25;
+
+  noiseSource.connect(noiseGain);
+  noiseGain.connect(audioContext.destination);
+  noiseSource.start();
+}
+
+function stopNoise() {
+  if (noiseSource) {
+    noiseSource.stop();
+    noiseSource.disconnect();
+    noiseSource = null;
+  }
+}
+
 function completeSession() {
   clearInterval(timerInterval);
   stopAllAudio();
+stopNoise();
   fadeIn(bowl, 1);
   timerDisplay.textContent = "Complete";
   menu.classList.add("open");
@@ -290,14 +357,16 @@ function beginSession() {
   ensureAudioContext();
   setBackground(backgroundSelect.value);
   startSelectedSounds();
-  startTone();
-  startTimer(Number(timerSelect.value));
+startTone();
+startNoise();
+startTimer(Number(timerSelect.value));
   menu.classList.remove("open");
 }
 
 function stopSession() {
   clearInterval(timerInterval);
   stopAllAudio();
+stopNoise();
   timerDisplay.textContent = `${timerSelect.value}:00`;
   menu.classList.add("open");
 }
@@ -361,6 +430,28 @@ document.querySelectorAll("[data-sound]").forEach(toggle => {
     }
   });
 });
+
+const noiseVolume = document.getElementById("noiseVolume");
+
+if (noiseVolume) {
+  noiseVolume.addEventListener("input", e => {
+    if (noiseGain) {
+      noiseGain.gain.value = Number(e.target.value) * 0.25;
+    }
+  });
+}
+
+const noiseSelect = document.getElementById("noiseSelect");
+
+if (noiseSelect) {
+  noiseSelect.addEventListener("change", () => {
+    const noiseToggle = document.getElementById("noiseToggle");
+
+    if (noiseToggle && noiseToggle.checked && noiseSource) {
+      startNoise();
+    }
+  });
+}
 
 const toneVolume = document.getElementById("toneVolume");
 
