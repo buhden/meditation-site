@@ -52,7 +52,7 @@ const presets = {
       rain: 0.55,
       music: 0.15,
       chants: 0,
-      fire: 0
+      fire: 0,
       forest: 0,
       ocean: 0.1,
       candle: 0
