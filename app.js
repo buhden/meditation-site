@@ -62,7 +62,7 @@ const presets = {
       rain: 0.15,
       music: 0.35,
       chants: 0,
-      fire: 0.1
+      forest: 0.25,
     }
   },
 
@@ -88,7 +88,7 @@ const presets = {
       rain: 0.35,
       music: 0.25,
       chants: 0.1,
-      fire: 0
+      forest: 0
     }
   }
 };
