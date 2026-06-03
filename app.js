@@ -1,12 +1,15 @@
-const sounds = {
-  rain: document.getElementById("rain"),
-  music: document.getElementById("music"),
-  chants: document.getElementById("chants"),
-  fire: document.getElementById("fire")
-ocean: document.getElementById("ocean")
-candle: document.getElementById("candle")
-forest: document.getElementById("forest")
-};
+const sounds = {};
+
+document.querySelectorAll("[data-sound]").forEach(toggle => {
+  const name = toggle.dataset.sound;
+  const audio = document.getElementById(name);
+
+  if (audio) {
+    sounds[name] = audio;
+  } else {
+    console.warn(`No audio element found for: ${name}`);
+  }
+});
 
 const background = document.getElementById("background");
 const backgroundSelect = document.getElementById("backgroundSelect");
@@ -50,6 +53,9 @@ const presets = {
       music: 0.15,
       chants: 0,
       fire: 0
+      forest: 0,
+      ocean: 0.1,
+      candle: 0
     }
   },
 
@@ -62,7 +68,10 @@ const presets = {
       rain: 0.15,
       music: 0.35,
       chants: 0,
-      forest: 0.25,
+      fire: 0,
+      forest: 0.1,
+      ocean: 0.1,
+      candle: 0
     }
   },
 
@@ -76,6 +85,9 @@ const presets = {
       music: 0.1,
       chants: 0.45,
       fire: 0.25
+      forest: 0.1,
+      ocean: 0,
+      candle: 0
     }
   },
 
@@ -88,7 +100,10 @@ const presets = {
       rain: 0.35,
       music: 0.25,
       chants: 0.1,
-      forest: 0
+      fire: 0,
+      forest: 0.33,
+      ocean: 0,
+      candle: 0
     }
   }
 };
