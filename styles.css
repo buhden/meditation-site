@@ -13,7 +13,7 @@ body {
 #background {
   position: fixed;
   inset: 0;
-  background-image: url("assets/gifs/rain.gif");
+  background-image: url("assets/gifs/candle.gif");
   background-size: cover;
   background-position: center;
   filter: brightness(0.45);
@@ -71,7 +71,7 @@ button:hover {
   color: white;
 backdrop-filter: blur(20px);
 
-  border: 1px solid rgba(255,255,255,0.20);
+  border: 0.25px solid rgba(255,255,255,0.20);
 
   border-radius: 999px;
 
