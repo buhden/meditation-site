@@ -13,7 +13,7 @@ body {
 #background {
   position: fixed;
   inset: 0;
-  background-image: url("assets/gifs/candle.gif");
+  background-image: url("assets/gifs/rain.gif");
   background-size: cover;
   background-position: center;
   filter: brightness(0.45);
