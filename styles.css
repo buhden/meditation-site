@@ -66,6 +66,37 @@ button:hover {
   background: rgba(255,255,255,0.26);
 }
 
+.meditate-btn {
+  background: rgba(255,255,255,0.18);
+  color: white;
+
+  border: 1px solid rgba(255,255,255,0.25);
+
+  border-radius: 999px;
+
+  padding: 1rem 2rem;
+
+  font-size: 1.2rem;
+  font-weight: 600;
+
+  backdrop-filter: blur(20px);
+
+  transition: all 0.3s ease;
+
+  box-shadow:
+    0 0 25px rgba(255,255,255,0.08);
+}
+
+.meditate-btn:hover {
+  background: rgba(255,255,255,0.28);
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 0 35px rgba(255,255,255,0.15);
+}
+
+
 .primary {
   margin-top: 1rem;
   background: rgba(255,255,255,0.28);
