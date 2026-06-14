@@ -67,16 +67,17 @@ button:hover {
 }
 
 .meditate-btn {
-  background: rgba(255,255,255,0.18);
+  background: rgba(10,10,10,0.35);
   color: white;
+backdrop-filter: blur(20px);
 
-  border: 1px solid rgba(255,255,255,0.25);
+  border: 1px solid rgba(255,255,255,0.20);
 
   border-radius: 999px;
 
-  padding: 1rem 2rem;
+  padding: 1.25rem 3rem;
 
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   font-weight: 600;
 
   backdrop-filter: blur(20px);
@@ -95,7 +96,31 @@ button:hover {
   box-shadow:
     0 0 35px rgba(255,255,255,0.15);
 }
+@keyframes meditateGlow {
+  0% {
+    box-shadow:
+      0 0 10px rgba(255,255,255,0.15),
+      0 0 20px rgba(255,255,255,0.05);
+  }
 
+  50% {
+    box-shadow:
+      0 0 20px rgba(255,255,255,0.35),
+      0 0 60px rgba(255,255,255,0.15);
+  }
+
+  100% {
+    box-shadow:
+      0 0 10px rgba(255,255,255,0.15),
+      0 0 20px rgba(255,255,255,0.05);
+  }
+}
+
+.active-session {
+  animation: meditateGlow 4s ease-in-out infinite;
+
+  border-color: rgba(255,255,255,0.45);
+}
 
 .primary {
   margin-top: 1rem;

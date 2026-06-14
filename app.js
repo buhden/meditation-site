@@ -369,6 +369,7 @@ stopNoise();
   menu.classList.add("open");
 sessionActive = false;
 sessionBtn.textContent = "Begin Meditation";
+sessionBtn.classList.remove("active-session");
 }
 
 function beginSession() {
@@ -379,6 +380,7 @@ startTone();
 startNoise();
 startTimer(Number(timerSelect.value));
   menu.classList.remove("open");
+sessionBtn.classList.add("active-session");
 sessionActive = true;
 sessionBtn.textContent = "◼ End Session";
 }
@@ -391,6 +393,7 @@ stopNoise();
   menu.classList.add("open");
 sessionActive = false;
 sessionBtn.textContent = "▶ Begin Meditation";
+sessionBtn.classList.remove("active-session");
 }
 
 function applyPreset(name) {
