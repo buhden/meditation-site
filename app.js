@@ -11,10 +11,11 @@ document.querySelectorAll("[data-sound]").forEach(toggle => {
   }
 });
 
+let sessionActive = false;
+
 const background = document.getElementById("background");
 const backgroundSelect = document.getElementById("backgroundSelect");
-const beginBtn = document.getElementById("beginBtn");
-const stopBtn = document.getElementById("stopBtn");
+const sessionBtn = document.getElementById("sessionBtn");
 const timerSelect = document.getElementById("timerSelect");
 const timerDisplay = document.getElementById("timerDisplay");
 const bowl = document.getElementById("bowl");
@@ -366,6 +367,8 @@ stopNoise();
   fadeIn(bowl, 1);
   timerDisplay.textContent = "Complete";
   menu.classList.add("open");
+sessionActive = false;
+sessionBtn.textContent = "Begin Meditation";
 }
 
 function beginSession() {
@@ -376,6 +379,8 @@ startTone();
 startNoise();
 startTimer(Number(timerSelect.value));
   menu.classList.remove("open");
+sessionActive = true;
+sessionBtn.textContent = "◼ End Session";
 }
 
 function stopSession() {
@@ -384,6 +389,8 @@ function stopSession() {
 stopNoise();
   timerDisplay.textContent = `${timerSelect.value}:00`;
   menu.classList.add("open");
+sessionActive = false;
+sessionBtn.textContent = "▶ Begin Meditation";
 }
 
 function applyPreset(name) {
@@ -486,8 +493,13 @@ if (presetSelect) {
   });
 }
 
-beginBtn.addEventListener("click", beginSession);
-stopBtn.addEventListener("click", stopSession);
+sessionBtn.addEventListener("click", () => {
+  if (sessionActive) {
+    stopSession();
+  } else {
+    beginSession();
+  }
+});
 
 menuBtn.addEventListener("click", () => {
   menu.classList.toggle("open");
